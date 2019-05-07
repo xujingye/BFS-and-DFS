@@ -1,0 +1,91 @@
+// DFS - with cycle detect
+
+var testGraph = {
+ A : ["B","G"],
+ B : ["C", "F", "E"],
+ C : ["A", "D", "F"],
+ D : [],
+ E : [],
+ F : ["D"],
+ G : []
+};
+
+
+function existCheck(element, myarray) {
+
+    var len = myarray.length;
+    if (len <= 1) {
+        false 
+    }
+    for(var i = 0; i < len - 1; i++) {
+        if (element === myarray[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//console.log(existCheck("a", ["c", "b"]))
+
+
+//var x = [1,2];
+//var y = x.slice();
+//x.push(3);
+//console.log(y);
+
+
+function findRouteDFSWithRecord(current, target, routeRecourd, graph) {
+    // return null if a cycle or an endpoint detected 
+
+    //console.log("the value of current: " + current);
+    //console.log("the value of target: " + target);
+    console.log("the value of routeRecourd: " + routeRecourd);
+    //console.log("the value of graph: " + graph);
+
+    if (current === target) {
+        return routeRecourd;
+    } else if (existCheck(current, routeRecourd)) {
+        // a cycle
+        console.log("cycle detected");
+        return null ;
+    } else if (((graph[current]).length) === 0) {
+        // an endpoint
+        console.log("endpoint detected");
+        return null
+    } else {
+        
+        var nextNodes = graph[current];
+        var len = nextNodes.length;
+        console.log(routeRecourd);
+        for(var i = 0; i < len; i++) {
+            console.log(routeRecourd);
+            var newRouteRecourd = (routeRecourd.slice());
+            
+            newRouteRecourd.push(nextNodes[i]);
+            //console.log("the nextNodes is " + nextNodes);
+            //console.log("the next node is " + nextNodes[i]);
+            //console.log("the newroute is " + newRouteRecourd);
+
+            var result = findRouteDFSWithRecord(nextNodes[i], target, newRouteRecourd, graph);
+            if (result === null) {
+                continue;
+            } else {
+                return result
+            }
+        }
+
+        return null;
+        
+    }
+
+    }
+    
+
+function findRouteDFS(start, end, graph) {
+    return findRouteDFSWithRecord(start, end, [start], graph);
+
+}
+
+console.log(findRouteDFS("F", "A", testGraph))
+
+//console.log(testGraph["B"]);
